@@ -1,28 +1,37 @@
 <template>
-  <input @keyup.enter="addItem()" v-model="input">
-  <button @click="addItem()">add to list</button>
-  
-  <h2>Položky:</h2>
-  <ul>
-    <!-- the v-for wouldnt work without the :key thing, dont exactly 
-      understand why. Its recommended to use this though whenever 
-      possible-->
-    <li v-for="item in validList" :key="item.id">
-      {{ item.text }} 
-      {{ item.id }}
-      <span @click="deleteItem(item)" class="delete-btn">X</span>
-    </li>
+  <div style="width: 100; margin-top: 100px">
+  <div style="margin: auto; width: 300px">
+    <input @keyup.enter="addItem()" v-model="input" style="margin-right: 20px" autofocus>
+    <button @click="addItem()">Pridať</button>
     
-  </ul>
+    <hr>
 
-  <hr>
-  <h2>Zmazané:</h2>
-  <ul>
-    <li v-for="item in deletedList" :key="item.id">
-      <span class="deleted-item">{{ item.text }}</span> {{ item.id }}
-    </li>
-  </ul>
+    <h2>Položky:</h2>
+    <ul>
+      <!-- the v-for wouldnt work without the :key thing, dont exactly 
+        understand why. Its recommended to use this though whenever 
+        possible-->
+      <li v-for="item in validList" :key="`item-${item.id}`" class="undeleted-li">
+        <span class="undeleted-text">
+          {{ item.text }}
+        </span>
+        <button @click="deleteItem(item)" class="delete-btn">X</button>
+        
+      </li>
+      
+    </ul>
+    <hr>
+    <h2>Zmazané:</h2>
+    <ul>
+      <li v-for="item in deletedList" :key="item.id">
+        <div class="deleted-item" style="width: 200px; word-wrap: break-word;">
+          {{ item.text }}
+        </div>
+      </li>
+    </ul>
 
+  </div>
+  </div>
 </template>
 
 <script>
@@ -48,10 +57,15 @@
       },
       deletedList() {
         return this.list.filter(item => item.is_deleted)
+      },
+      getItem(id) {
+        return this.list.filter(item => item.id == id)
       }
     },
     methods: {
       addItem() {
+        if (this.input.trim() === "") return;
+
         this.list.push({
           id: this.list.length + 1,
           text: this.input,
@@ -72,17 +86,42 @@
   body {
     margin: 0px;
   }
+  h2 {
+    margin: 0px;
+  }
+  hr {
+    margin: 30px 0px;
+  }
+  li {
+    border-bottom: 1px dotted black;
+  }
   .deleted-item {
     text-decoration: line-through;
   }
   .delete-btn {
-    margin-left: 15px;
-    color: red;
+    border: none;
+    background-color: red; 
+    padding: 3px 5px;
+    margin: 2px;
+    border-radius: 3px;
+    height: fit-content;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
   }
   .delete-btn:hover {
-    margin-left: 15px;
-    color: black;
-    font-weight: bold;
+    color: white;
+  }
+  .undeleted-text {
+    display: inline-block; 
+    width: 200px; 
+    word-wrap: break-word;
+  }
+  .undeleted-li {
+    display: flex;
+    column-gap: 10px;
+    width: 100%; 
+    height: max-content; 
+    /* background-color: aqua; */
   }
 
 </style>
