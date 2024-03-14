@@ -15,17 +15,19 @@
           understand why. Its recommended to use this though whenever 
           possible-->
         <li v-for="(item, index) in validItems" :key="`${index}`" class="undeleted-li">
-          <span class="undeleted-text">
-            {{ item.text }}
-          </span>
-          <button @click="deleteItem(item)" class="delete-btn">X</button>
-          
+          <div style="display: flex">
+            <div class="valid-item">
+              {{ item.text }}
+            </div>
+            <button @click="deleteItem(item)" class="delete-btn">X</button>
+          </div>
         </li>
         
       </ul>
       <hr>
       <h2>Zmazané:</h2>
       <ul>
+        <!-- using the id instead of the index, as using the index stops it from working -->
         <li v-for="item in deletedItems" :key="item.id">
           <div class="deleted-item">
             {{ item.text }}
@@ -49,7 +51,11 @@
     data() {
       return {
         input: "",
-        items: [] // {text: "ahoj", is_deleted: false}
+        items: [
+          // {text: "dummy item", is_deleted: false}, 
+          // {text: "another one", is_deleted: false}, 
+          // {text: "and another", is_deleted: false}
+        ] // {text: "ahoj", is_deleted: false}
       }
     },
     // just like data, but you use it whenever you have a variable 
@@ -67,6 +73,7 @@
         if (this.input.trim() === "") return;
 
         this.items.push({
+          id: this.items.length + 1,
           text: this.input,
           is_deleted: false
         })
@@ -82,6 +89,11 @@
 </script>
 
 <style>
+  * {
+    font-family: "SF Pro Display", sans-serif;
+    line-height: 24px;
+    letter-spacing: 1px;
+  } 
   body, h2 {
     margin: 0px;
   }
@@ -89,11 +101,14 @@
     margin: 30px 0px;
   }
   li {
-    border-bottom: 1px dotted black;
+    border-bottom: 1px solid rgb(162, 212, 219);
   }
 
   #main-content {
     width: 300px;
+    background-color: rgb(252, 246, 229);
+    padding: 40px 50px 80px 50px;
+    box-shadow: 6px 7px 16px 6px rgba(0,0,0,0.20);
   }
   #heading {
     width: fit-content; 
@@ -113,11 +128,6 @@
   .margin-top-100 {
     margin-top: 100px;
   }
-  .deleted-item {
-    text-decoration: line-through;
-    width: 200px; 
-    word-wrap: break-word;
-  }
   .delete-btn {
     border: none;
     background-color: red; 
@@ -130,14 +140,21 @@
   }
   .delete-btn:hover {
     color: white;
+    font-weight: bold;
+    margin: 2px 1px;
   }
-  .undeleted-text {
+  .valid-item {
     display: inline-block; 
+    align-self: center;
+    width: 200px; 
+    word-wrap: break-word;
+  }
+  .deleted-item {
+    text-decoration: line-through;
     width: 200px; 
     word-wrap: break-word;
   }
   .undeleted-li {
-    display: flex;
     column-gap: 10px;
     width: 100%; 
     height: max-content; 
