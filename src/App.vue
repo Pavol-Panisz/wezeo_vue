@@ -1,36 +1,39 @@
 <template>
-  <div style="width: 100; margin-top: 100px">
-  <div style="margin: auto; width: 300px">
-    <input @keyup.enter="addItem()" v-model="input" style="margin-right: 20px" autofocus>
-    <button @click="addItem()">Pridať</button>
-    
-    <hr>
+  <div class="center margin-top-100">
+    <div id="main-content">
 
-    <h2>Položky:</h2>
-    <ul>
-      <!-- the v-for wouldnt work without the :key thing, dont exactly 
-        understand why. Its recommended to use this though whenever 
-        possible-->
-      <li v-for="item in validList" :key="`item-${item.id}`" class="undeleted-li">
-        <span class="undeleted-text">
-          {{ item.text }}
-        </span>
-        <button @click="deleteItem(item)" class="delete-btn">X</button>
-        
-      </li>
+      <h1 id="heading">Todo List</h1>
+
+      <input @keyup.enter="addItem()" v-model="input" id="input-field" autofocus>
+      <button @click="addItem()">Pridať</button>
       
-    </ul>
-    <hr>
-    <h2>Zmazané:</h2>
-    <ul>
-      <li v-for="item in deletedList" :key="item.id">
-        <div class="deleted-item" style="width: 200px; word-wrap: break-word;">
-          {{ item.text }}
-        </div>
-      </li>
-    </ul>
+      <hr>
 
-  </div>
+      <h2>Položky:</h2>
+      <ul>
+        <!-- the v-for wouldnt work without the :key thing, dont exactly 
+          understand why. Its recommended to use this though whenever 
+          possible-->
+        <li v-for="(item, index) in validItems" :key="`${index}`" class="undeleted-li">
+          <span class="undeleted-text">
+            {{ item.text }}
+          </span>
+          <button @click="deleteItem(item)" class="delete-btn">X</button>
+          
+        </li>
+        
+      </ul>
+      <hr>
+      <h2>Zmazané:</h2>
+      <ul>
+        <li v-for="item in deletedItems" :key="item.id">
+          <div class="deleted-item">
+            {{ item.text }}
+          </div>
+        </li>
+      </ul>
+
+    </div>
   </div>
 </template>
 
@@ -46,47 +49,40 @@
     data() {
       return {
         input: "",
-        list: [] // {id: 1, text: "ahoj", is_deleted: false}
+        items: [] // {text: "ahoj", is_deleted: false}
       }
     },
     // just like data, but you use it whenever you have a variable 
     // whose value depends on another variable
     computed: {
-      validList() {
-        return this.list.filter(item => !item.is_deleted)
+      validItems() {
+        return this.items.filter(item => !item.is_deleted)
       },
-      deletedList() {
-        return this.list.filter(item => item.is_deleted)
+      deletedItems() {
+        return this.items.filter(item => item.is_deleted)
       },
-      getItem(id) {
-        return this.list.filter(item => item.id == id)
-      }
     },
     methods: {
       addItem() {
         if (this.input.trim() === "") return;
 
-        this.list.push({
-          id: this.list.length + 1,
+        this.items.push({
           text: this.input,
           is_deleted: false
         })
-        this.input = ""
         console.log("added " + this.input)
+        this.input = ""
       },
       deleteItem(item) {
         item.is_deleted = true
-        console.log("deleting item " + item.text + " that has id " + item.id)
+        console.log("deleting item " + item.text)
       }
     }
   }
 </script>
 
 <style>
-  body {
-    margin: 0px;
-  }
-  h2 {
+  body, h2 {
     margin: 0px;
   }
   hr {
@@ -95,8 +91,32 @@
   li {
     border-bottom: 1px dotted black;
   }
+
+  #main-content {
+    width: 300px;
+  }
+  #heading {
+    width: fit-content; 
+    margin: auto; 
+    margin-bottom: 60px;
+  }
+  #input-field {
+    margin-right: 20px;
+  }
+  
+  .center {
+    width: 100%;
+  } 
+  .center > * {
+    margin: auto;
+  }
+  .margin-top-100 {
+    margin-top: 100px;
+  }
   .deleted-item {
     text-decoration: line-through;
+    width: 200px; 
+    word-wrap: break-word;
   }
   .delete-btn {
     border: none;
@@ -121,7 +141,6 @@
     column-gap: 10px;
     width: 100%; 
     height: max-content; 
-    /* background-color: aqua; */
   }
 
 </style>
