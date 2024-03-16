@@ -14,7 +14,7 @@
         <!-- the v-for wouldnt work without the :key thing, dont exactly 
           understand why. Its recommended to use this though whenever 
           possible-->
-        <li v-for="(item, index) in validItems" :key="`${index}`" class="undeleted-li">
+        <li v-for="item in validItems" :key="item.id" class="undeleted-li">
           <div style="display: flex">
             <div class="valid-item">
               {{ item.text }}
