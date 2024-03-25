@@ -10,24 +10,25 @@
 	</template>
 
 	<template v-else>
-		Počet položiek v zozname: {{ shoppingLists.length }}
 
         <div v-for="shoppingList in shoppingLists" :key="shoppingList.id" class="shopping-lists-list">
-            <h2>{{ shoppingList.title }}</h2>
-            <ul>
-                <li v-for="item in shoppingList.items" :key="item.id">
-                    <span v-if="item.is_checked === true" class="item-unchecked">
-                        {{ item.name }}
-                    </span>
+            <a :href="`/shopping-lists/${shoppingList.id}`" @click.prevent="openShoppingListDetail(shoppingList)">
+                <h2>{{ shoppingList.title }}</h2>
+                <ul>
+                    <li v-for="item in shoppingList.items" :key="item.id">
+                        <span v-if="item.is_checked === true" class="item-unchecked">
+                            {{ item.name }}
+                        </span>
 
-                    <span v-else class="item-checked">
-                        {{ item.name }}
-                    </span>
+                        <span v-else class="item-checked">
+                            {{ item.name }}
+                        </span>
 
-                    {{ item.value }}
-                    {{ item.unit }}
-                </li>
-            </ul>
+                        {{ item.value }}
+                        {{ item.unit }}
+                    </li>
+                </ul>
+            </a>
         </div>
 	</template>
 </template>
@@ -44,11 +45,7 @@ export default {
 
 	async mounted() {
 		try {
-			// const response = await axios.get('https://shoppinglist.wezeo.dev/shoppinglist/lists')
-			// const data = response.data.data
-
-			// Skrateny zapis zakomentovaneho kodu vyssie, kde vytiahneme data pomocou destrukcie objektu
-			const { data: { data: shoppingLists} } = await axios.get('/api/v1/shopping-lists')
+			const { data: { data: shoppingLists} } = await axios.get('https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists')
 			this.shoppingLists = shoppingLists
 
             console.log(shoppingLists[0])
@@ -56,6 +53,11 @@ export default {
 		} catch (error) {
 			console.error('Error:', error)
 			this.shoppingLists = { error }
+		}        
+	},
+    methods: {
+		openShoppingListDetail({ id }) {
+			this.$router.push({ name: 'Shopping List - Detail', params: { id } })
 		}
 	}
 }
