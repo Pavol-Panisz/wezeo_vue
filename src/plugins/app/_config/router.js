@@ -1,6 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
+	
+	// TODO: Check if this is corrent, I dont understand why/how this works
+	{
+		path: '/',
+		redirect: '/shoping-lists'
+	},
+
 	{
 		path: '',
 		name: 'Shopping List - List',
